@@ -1,2 +1,3 @@
-# daily-menu
-Small project to make a menu for daily cooking.
+# Customer Web Shop
+
+Project made in Node JS.

@@ -61,3 +61,19 @@ exports.getCheckout = (req, res, next) => {
     pageTitle: 'Checkout'
   });
 };
+
+
+
+
+
+// TEMP is a TEST type of page, DON'T use it for other purposes else code bugs will arise
+exports.getTemp = (req, res, next) => {
+  Product.findById('0.4801459024351582', product => {
+    const numero = [...product.title];
+    res.render('shop/temp', {
+      path: '/temp',
+      pageTitle: 'Test page',
+      test: numero
+    });
+  })
+};

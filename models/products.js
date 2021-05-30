@@ -15,14 +15,20 @@ const getProductsFromFile = cb => {
     fs.readFile(p, (err, fileContent) => {
         if (err) {
             cb([]);
-        } else {
-         cb(JSON.parse(fileContent));
+        } else { // Try catch por causa que se não existir o JSON, da bug
+            try {
+                cb(JSON.parse(fileContent));
+            } catch (err) {
+                console.log(err);
+                cb([]);
+            }
         }
     });
 };
 
 module.exports = class Products {
-     constructor(title, imageUrl, price, content) {
+     constructor(id, title, imageUrl, price, content) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
@@ -30,12 +36,22 @@ module.exports = class Products {
     }
     // file working
     save() {
-        this.id = Math.random().toString();
         getProductsFromFile(products => {
-            products.push(this);
-            fs.writeFile(p, JSON.stringify(products), err => {
-             console.log(err);
-            });
+            if( this.id ) {
+                const existProductIndex = products.findIndex( prod => prod.id === this.id ); // procurar indice do objeto
+                const updatedProduct = [...products]; // atribuir todos os valores previamente setados
+                updatedProduct[existProductIndex] = this; // atribuir NOVOS valores ao novo indice 
+                console.log('heree')
+                fs.writeFile(p, JSON.stringify(updatedProduct), err => {
+                    console.log(err)
+                });
+            } else {
+                this.id = Math.random().toString();
+                products.push(this);
+                fs.writeFile(p, JSON.stringify(products), err => {
+                    console.log(err);
+                });
+            };
         });
     }
 

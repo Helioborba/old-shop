@@ -23,6 +23,7 @@
                 <h3>Content</h3>
                 <label for='content'></label>
                 <textarea type='text' name='content' id='content'><% if(editing) { %> <%= product.content %> <% } %></textarea>
+                <% if (editing) { %> <input type='hidden' value='<%= product.id %>' name='productId'> <%} %> 
             </div>
             <button class="btn" type='submit'><% if (editing) { %> Update Product <% } else { %>Add Product<% } %> </button>
         </form>
