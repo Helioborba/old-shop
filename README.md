@@ -1,3 +1,3 @@
 # Customer Web Shop
 
-Project made in Node JS.
+Just a Project for now...
