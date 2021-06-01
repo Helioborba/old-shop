@@ -4,7 +4,7 @@
 const fs = require('fs');
 const rootDir = require('../util/rootDir')
 const path = require('path');
-
+const cart = require('./cart')
 const p = path.join(
   rootDir,
   'data',
@@ -13,16 +13,11 @@ const p = path.join(
 
 const getProductsFromFile = cb => {
     fs.readFile(p, (err, fileContent) => {
-        if (err) {
-            cb([]);
-        } else { // Try catch por causa que se não existir o JSON, da bug
-            try {
-                cb(JSON.parse(fileContent));
-            } catch (err) {
-                console.log(err);
-                cb([]);
-            }
-        }
+      if (err) {
+        cb([]);
+      } else {
+        cb(JSON.parse(fileContent));
+      }
     });
 };
 
@@ -41,7 +36,6 @@ module.exports = class Products {
                 const existProductIndex = products.findIndex( prod => prod.id === this.id ); // procurar indice do objeto
                 const updatedProduct = [...products]; // atribuir todos os valores previamente setados
                 updatedProduct[existProductIndex] = this; // atribuir NOVOS valores ao novo indice 
-                console.log('heree')
                 fs.writeFile(p, JSON.stringify(updatedProduct), err => {
                     console.log(err)
                 });
@@ -66,6 +60,20 @@ module.exports = class Products {
             cb(product);
         });
     };
+    static delete(id) {
+        getProductsFromFile(products => {
+            const product = products.find(prod => prod.id === id); // used for the price
+
+            const updatedProduct = products.filter( prod => prod.id !== id ); // procurar indice do objeto
+            console.log(id);
+            
+            fs.writeFile(p, JSON.stringify(updatedProduct), err => {
+                if(!err) {
+                    cart.deleteProduct(id, product.price); // price
+                }
+            });
+        });
+    }
 
     // save() {
     //     return db.execute(
