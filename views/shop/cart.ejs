@@ -5,6 +5,34 @@
     <body>
         <%- include('../includes/main/navigation.ejs')%>
         <main>
-            <h1>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Excepturi accusamus temporibus fuga itaque, unde voluptas error! Excepturi praesentium consequatur ad, officia totam voluptatibus quod officiis incidunt porro odio, aliquid explicabo.</h1>
+            <% if (prods.length > 0) { %>
+                <div class='grid'>
+                    <% for(let product of prods) { %>
+                        <% for (let i = 0; i < product.qty; i++) { %>
+                            <article class="card product-item">
+                                <header class="card__header">
+                                        <h1 class='product__title'><%= product.productData.title %></h1>
+                                        <div class="card__image">
+                                            <img src="<%= product.productData.imageUrl %>" alt='A book'>
+                                        </div>
+                                        <div class="card__conten">
+                                            <h2 class="product__price"> R$ <%= product.productData.price %> </h2>
+                                            <p class="product__description"><%= product.productData.content %></p>
+                                        </div>
+                                    <div class="card__actions ">
+                                        <a href="/admin/edit-product/<%= product.productData.id %>?edit=true" class="btn">Details</a>
+                                        <form action="/cart-remove-item" method='POST'>
+                                            <input type="hidden" value="<%= product.productData.id %>" name="productId">
+                                            <button class="btn" type="submit">Remove</button>
+                                        </form>
+                                    </div>
+                                </header>
+                            </article>
+                        <% } %>
+                    <% } %>
+                </div>
+            <% } else { %>
+                <h1>no products</h1>
+            <% } %>
         </main>
         <%- include('../includes/main/end.ejs')%>

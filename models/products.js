@@ -31,10 +31,10 @@ module.exports = class Products {
     }
     // file working
     save() {
-        getProductsFromFile(products => {
+        getProductsFromFile( products => {
             if( this.id ) {
                 const existProductIndex = products.findIndex( prod => prod.id === this.id ); // procurar indice do objeto
-                const updatedProduct = [...products]; // atribuir todos os valores previamente setados
+                const updatedProduct = [...products]; // atribuir todos os valores do arquivo JSON
                 updatedProduct[existProductIndex] = this; // atribuir NOVOS valores ao novo indice 
                 fs.writeFile(p, JSON.stringify(updatedProduct), err => {
                     console.log(err)
@@ -60,6 +60,7 @@ module.exports = class Products {
             cb(product);
         });
     };
+
     static delete(id) {
         getProductsFromFile(products => {
             const product = products.find(prod => prod.id === id); // used for the price
