@@ -1,10 +1,14 @@
 // Imports
-// const db = require('../connections/demo_db_connection');
 
+const db = require('../connections/demo_db_connection'); // Conexao com a DB
+// file working
 const fs = require('fs');
 const rootDir = require('../util/rootDir')
 const path = require('path');
+//cart
 const cart = require('./cart')
+
+// place where JSON will be stored
 const p = path.join(
   rootDir,
   'data',
@@ -31,34 +35,19 @@ module.exports = class Products {
     }
     // file working
     save() {
-        getProductsFromFile( products => {
-            if( this.id ) {
-                const existProductIndex = products.findIndex( prod => prod.id === this.id ); // procurar indice do objeto
-                const updatedProduct = [...products]; // atribuir todos os valores do arquivo JSON
-                updatedProduct[existProductIndex] = this; // atribuir NOVOS valores ao novo indice 
-                fs.writeFile(p, JSON.stringify(updatedProduct), err => {
-                    console.log(err)
-                });
-            } else {
-                this.id = Math.random().toString();
-                products.push(this);
-                fs.writeFile(p, JSON.stringify(products), err => {
-                    console.log(err);
-                });
-            };
-        });
+        return db.execute('insert into (title,price,content,imageUrl) value (?,?,?,?)', 
+        [this.title, this.price, this.content, this.imageUrl]
+        );
     }
 
-     // file working
-    static fetchAll(cb) { 
-        getProductsFromFile(cb);
+    // file working
+    static fetchAll() { 
+        return db.execute('select * from shop');
     };
-
-    static findById(id, cb) { 
-        getProductsFromFile((products) => {
-            const product = products.find(p => p.id === id);
-            cb(product);
-        });
+    
+    static findById(id) { 
+        return db.execute('select * from shop where shop.id=?', 
+        [id]);
     };
 
     static delete(id) {
